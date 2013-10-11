@@ -56,4 +56,4 @@ if __name__ == "__main__":
         config = json.loads(json_string)
     except IOError:
         print "No configuration file to load..."
-    app.run(debug = True, host='0.0.0.0', port=8080)
+    app.run(debug = True, host='0.0.0.0', port=80)
