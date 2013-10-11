@@ -12,6 +12,10 @@ from util.perspective_transformation import transform_perspective
 camera_module = None
 config = None
 
+def clear_config():
+    global config
+    config = None
+
 @app.route('/configuration', methods=['GET', 'POST'])
 def configuration():
     if request.method == 'POST':
@@ -28,6 +32,8 @@ def configuration():
         return "Configuration saved"
     if request.method == 'GET':
         global config
+        if config is None:
+            return "Camera has no configuration", 404
         return jsonify(config)
 
 @app.route("/")
@@ -46,6 +52,13 @@ def snapshot():
     imageBuffer.seek(0)
     return send_file(imageBuffer, mimetype='image/jpeg')
 
+@app.route("/rawimage")
+def rawimage():
+    img = camera_module.takePhoto()
+    imageBuffer = StringIO.StringIO() 
+    img.save(imageBuffer, format="JPEG")
+    imageBuffer.seek(0)
+    return send_file(imageBuffer, mimetype='image/jpeg')
     
 if __name__ == "__main__":
     import picam
