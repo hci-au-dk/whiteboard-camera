@@ -26,6 +26,23 @@ class CameraTest(unittest.TestCase):
         response = self.app.post('/configuration', data = json_data, content_type='application/json')
         assert response.status_code == 200
         
+        try:
+            f = open('config.json', 'r')
+            json_string = f.read()
+            loaded_config = json.loads(json_string)
+        except IOError:
+            assert False, "No configuration loaded"
+            return
+        assert loaded_config is not None
+        assert loaded_config['x0'] == configuration['x0']
+        assert loaded_config['y0'] == configuration['y0']
+        assert loaded_config['x1'] == configuration['x1']
+        assert loaded_config['y1'] == configuration['y1']
+        assert loaded_config['x2'] == configuration['x2']
+        assert loaded_config['y2'] == configuration['y2']
+        assert loaded_config['x3'] == configuration['x3']
+        assert loaded_config['y3'] == configuration['y3']
+        
     def test_snapshot(self):
         configuration = {'x0': 530, 'y0': 200, 'x1': 480, 'y1': 1240, 'x2': 1610, 'y2': 1512, 'x3': 1682, 'y3': 22}
         json_data = json.dumps(configuration)
