@@ -45,7 +45,7 @@ def snapshot():
     global config
     img = camera_module.takePhoto()
     if config is not None:
-        img = transform_perspective(img, config['x0'], config['y0'], config['x1'], config['y1'], config['x2'], config['y2'], config['x3'], config['y3'])
+        img = transform_perspective(img, int(config['x0']), int(config['y0']), int(config['x1']), int(config['y1']), int(config['x2']), int(config['y2']), int(config['x3']), int(config['y3']))
         
     imageBuffer = StringIO.StringIO() 
     img.save(imageBuffer, format="JPEG")
