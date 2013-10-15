@@ -93,3 +93,17 @@ class CameraTest(unittest.TestCase):
         assert len(response_json_str) == len(json_data)
         assert response.status_code == 200
         
+    def test_delete_configuration(self):
+        configuration = {'x0': 530, 'y0': 200, 'x1': 480, 'y1': 1240, 'x2': 1610, 'y2': 1512, 'x3': 1682, 'y3': 22}
+        json_data = json.dumps(configuration)
+        response = self.app.post('/configuration', data = json_data, content_type='application/json')
+        
+        response2 = self.app.delete('/configuration')
+        try:
+            f = open('config.json', 'r')
+            json_string = f.read()
+            assert False, "Configuration still there"
+        except IOError:
+            assert True, "No configuration file"
+            return
+        

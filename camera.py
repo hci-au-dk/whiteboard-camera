@@ -4,6 +4,7 @@ import time
 import tempfile
 import StringIO
 import json
+import os
 from shutil import copyfileobj
 from os import remove
 from PIL import Image
@@ -16,7 +17,7 @@ def clear_config():
     global config
     config = None
 
-@app.route('/configuration', methods=['GET', 'POST'])
+@app.route('/configuration', methods=['GET', 'POST', 'DELETE'])
 def configuration():
     if request.method == 'POST':
         if not isinstance(request.json, dict):
@@ -35,6 +36,10 @@ def configuration():
         if config is None:
             return "Camera has no configuration", 404
         return jsonify(config)
+    if request.method == 'DELETE':
+        os.remove('config.json')
+        return "Deleted configuration file", 200    
+    
 
 @app.route("/")
 def hello():
