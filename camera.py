@@ -105,7 +105,7 @@ def button_snapshot():
         return s
 
     ip = server_config['server']
-    server_location = 'http://' + ip + '/upload/'
+    server_location = 'http://' + server_config['server'] + '/pi-upload/'
 
     now = datetime.datetime.now()
     filename = 'button_%i%i%i_%i%i%i' % (now.year,
@@ -120,7 +120,9 @@ def button_snapshot():
         r = requests.post(server_location, files=files)
     except:
         requests.exceptions.ConnectionError
-        s = 'Connection to ' + server_location + ' timed out. Check that this address is accepting connections.'
+        s = 'Connection to ' + server_location + ' timed out. Check to see that this address is accepting connections.'
+        s = s + 'If this is the incorrect location, please register your pi again. This will require deleting the'
+        s = s + 'previous configuration, as all pi ip addresses must be unique.'
         return s
 
     response = make_response(r.json(), 200)
