@@ -12,10 +12,12 @@ from shutil import copyfileobj
 from os import remove
 from PIL import Image
 from util.perspective_transformation import transform_perspective
+from util import printer
 
 camera_module = None
 config = None
 server_config = None
+tp = None
 
 def clear_config():
     global config
@@ -87,6 +89,14 @@ def rawimage():
     imageBuffer.seek(0)
     return send_file(imageBuffer, mimetype='image/jpeg')
 
+@app.route("/thermal-hello")
+def termal_hello():
+    global tp
+    tp.print_text("hello")
+    tp.linefeed(3)
+
+    return 'See thermal printer for message!', 200
+
 @app.route("/button-snapshot")
 def button_snapshot():
     global config
@@ -129,6 +139,7 @@ def button_snapshot():
     response.headers['Content-type'] = 'application/json'
     return response
 
+
     
 if __name__ == "__main__":
     import picam
@@ -145,4 +156,10 @@ if __name__ == "__main__":
         server_config = json.loads(json_string)
     except IOError:
         print "No server configuration file to load..."
+
+    # Now be listening on the terminal for a take-photo command    
+    tp = printer.ThermalPrinter()
+
     app.run(debug = True, host='0.0.0.0', port=80)
+
+
