@@ -50,6 +50,7 @@ class ThermalPrinter(object):
 
     BAUDRATE = 19200
     TIMEOUT = 3
+    DWIDTH = False
 
     # pixels with more color value (average for multiple channels) are counted as white
     # tweak this if your images appear too black or too white
@@ -354,6 +355,33 @@ class ThermalPrinter(object):
             test_img.save(test_print, 'PNG')
             print "output saved to %s" % test_print.name
             test_print.close()           
+
+    def double_width(self, flag):
+        self.printer.write(self._ESC)
+
+        if flag == True:
+            self.printer.write(chr(14))
+            self.DWIDTH = True
+        else:
+            self.printer.write(chr(20))
+            self.DWIDTH = False
+            
+    def double_height(self, flag):
+        self.printer.write(self._ESC)
+        self.printer.write(chr(33))
+
+        if flag == True:
+            if self.DWIDTH == True:
+                self.printer.write(chr(48))
+            else:
+                self.printer.write(chr(16))
+
+        if flag == False:
+            if self.DWIDTH == True:
+                self.printer.write(chr(32))
+            else:
+                self.printer.write(chr(0))
+
 
 
 

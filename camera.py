@@ -23,17 +23,13 @@ def clear_config():
     global config
     config = None
 
-@app.route('/register-server', methods=['POST', 'DELETE'])
+@app.route('/register-server', methods=['GET', 'DELETE'])
 def register_server():
-    if request.method == 'POST':
-        if not isinstance(request.json, dict):
-            return 'Malformed registration data', 400
-        if len(request.json) != 1:
-            return 'Configuration must have 1 entries', 400
-        if (not 'server' in request.json):
-            return 'Configuration must have key server', 400
+    if request.method == 'GET':
+        ip = request.remote_addr
+        pi_id = request.args.get('id')
         global server_config
-        server_config = request.json
+        server_config = {'server': ip, 'id': pi_id}
         with open('server.json', 'w') as outfile:
             json.dump(server_config, outfile)
         return 'Server saved'
@@ -90,7 +86,7 @@ def rawimage():
     return send_file(imageBuffer, mimetype='image/jpeg')
 
 @app.route("/thermal-hello")
-def termal_hello():
+def thermal_hello():
     global tp
     tp.print_text("hello")
     tp.linefeed(3)
@@ -99,6 +95,43 @@ def termal_hello():
 
 @app.route("/button-snapshot")
 def button_snapshot():
+    global tp
+    now = datetime.datetime.now()
+
+    tp.print_text('Time submitted: ')
+    tp.print_text(str(now))
+    tp.linefeed(2)
+
+    # send image to the server
+    global server_config
+    if server_config is None:
+        s = 'Server configuration file not found. Perhaps you have not registered this pi yet?'
+
+    ip = server_config['server']
+    server_location = 'http://' + server_config['server']
+
+    # generate the access code
+    r = requests.get(server_location + '/generate-access-code/')
+    code = r.json()['code']
+
+    tp.print_text('You have 2 days to process this snapshot before it is ')
+    tp.print_text('automatically deleted.')
+    tp.linefeed(2)
+
+    tp.print_text('Access code: \n')
+    tp.justify("C")
+    tp.double_width(True)
+    tp.double_height(True)
+    tp.print_text(code)
+    tp.double_width(False)
+    tp.double_height(False)
+    tp.justify("L")
+    tp.linefeed(2)
+
+    tp.print_text('Your photo will be available at: \n')
+    tp.print_text('http://' + server_config['server'] + '/')
+    tp.linefeed(5)
+
     global config
     img = camera_module.takePhoto()
     if config is not None:
@@ -108,16 +141,6 @@ def button_snapshot():
     img.save(imageBuffer, format="JPEG")
     imageBuffer.seek(0)
 
-    # send image to the server
-    global server_config
-    if server_config is None:
-        s = 'Server configuration file not found. Perhaps you have not registered this pi yet?'
-        return s
-
-    ip = server_config['server']
-    server_location = 'http://' + server_config['server'] + '/pi-upload/'
-
-    now = datetime.datetime.now()
     filename = 'button_%i%i%i_%i%i%i' % (now.year,
                                          now.month,
                                          now.day,
@@ -126,18 +149,18 @@ def button_snapshot():
                                          now.second)
     filename = filename + ".jpg"
     files = {'file': (filename, imageBuffer.getvalue())}
-    try:
-        r = requests.post(server_location, files=files)
-    except:
-        requests.exceptions.ConnectionError
-        s = 'Connection to ' + server_location + ' timed out. Check to see that this address is accepting connections.'
-        s = s + 'If this is the incorrect location, please register your pi again. This will require deleting the'
-        s = s + 'previous configuration, as all pi ip addresses must be unique.'
-        return s
+    data = {'id': server_config['id'], 'code': code}
+    r = requests.post(server_location + '/pi-upload/', files=files, data=data)
+    if r.status_code != 200:
+        tp.print_text('There was an error with the photo:\n')
+        tp.print_text(str(r.status_code))
+        tp.linefeed()
+        tp.print_text(r.text)
+    elif r.json()['code'] != code:
+        tp.print_text('There was a code mismatch error.\n')
+        tp.print_text(code + ' vs ' + r.json()['code'])
 
-    response = make_response(r.json(), 200)
-    response.headers['Content-type'] = 'application/json'
-    return response
+    return 'Success', 200
 
 
     
