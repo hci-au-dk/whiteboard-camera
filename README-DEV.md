@@ -6,6 +6,7 @@ Installation
 Install some things to get you started:
 
 ```
+$ sudo apt-get update
 $ sudo apt-get install python-dev python-rpi.gpio
 $ curl -O http://python-distribute.org/distribute_setup.py
 $ python distribute_setup.py
@@ -44,7 +45,17 @@ To finish setting up the thermal printer:
 $ sudo usermod -a -G dialout pi # permission to dial out
 ```
 
-Edit `sudo nano /boot/cmdline.txt` by deleting: 
+Edit `/boot/cmdline.txt` by deleting anything that contains `ttyAMA0`.
+
+Here's what it should look like in the end:
+
+```
+dwc_otg.lpm_enable=0 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 rootwait
+```
+
+We also need to remove/ comment out the last line of `/etc/inittab`.
+
+Finally, `sudo shutdown -r now`.
 
 Now, you are ready to run your server. If you want it to run for a long time in a place, I would recommend using `screen`.
 
