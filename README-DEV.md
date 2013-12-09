@@ -33,10 +33,18 @@ $ deactivate #when you are done with your virtual environment - Don't do this ye
 Next, install the required components:
 
 ```
-$ sudo apt-get install libjpeg8-dev
+$ sudo apt-get install libjpeg8-dev python-serial python-imaging-tk
 $ pip install -r requirements.txt
 $ pip install https://github.com/hci-au-dk/picam/zipball/master#egg=picam
 ```
+
+To finish setting up the thermal printer:
+
+```
+$ sudo usermod -a -G dialout pi # permission to dial out
+```
+
+Edit `sudo nano /boot/cmdline.txt` by deleting: 
 
 Now, you are ready to run your server. If you want it to run for a long time in a place, I would recommend using `screen`.
 
