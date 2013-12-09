@@ -6,7 +6,7 @@ Installation
 Install some things to get you started:
 
 ```
-$ sudo apt-get install python-dev
+$ sudo apt-get install python-dev python-rpi.gpio
 $ curl -O http://python-distribute.org/distribute_setup.py
 $ python distribute_setup.py
 $ curl -O https://raw.github.com/pypa/pip/master/contrib/get-pip.py
