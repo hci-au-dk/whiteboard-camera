@@ -183,6 +183,18 @@ if __name__ == "__main__":
     # Now be listening on the terminal for a take-photo command    
     tp = printer.ThermalPrinter()
 
+    import logging
+    from logging.handlers import RotatingFileHandler
+
+    logger = logging.getLogger("")
+    logger.setLevel(logging.DEBUG)
+    handler = logging.handlers.RotatingFileHandler(
+        'camera.log', maxBytes=(1048576*5), backupCount=7
+        )
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+
     app.run(debug = True, host='0.0.0.0', port=80)
 
 
