@@ -36,7 +36,8 @@ Next, install the required components:
 ```
 $ sudo apt-get install libjpeg8-dev python-serial python-imaging-tk
 $ pip install -r requirements.txt
-$ pip install https://github.com/hci-au-dk/picam/zipball/master#egg=picam
+$ sudo pip install https://github.com/hci-au-dk/picam/zipball/master#egg=picam
+$ sudo pip install flask
 ```
 
 To finish setting up the thermal printer:
