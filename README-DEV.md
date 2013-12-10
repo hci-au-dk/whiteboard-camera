@@ -53,7 +53,7 @@ Here's what it should look like in the end:
 dwc_otg.lpm_enable=0 console=tty1 root=/dev/mmcblk0p2 rootfstype=ext4 rootwait
 ```
 
-We also need to remove/ comment out the last line of `/etc/inittab`.
+We also need to remove/ comment out the last line of `/etc/inittab` (`T0:23:respawn:/sbin/getty -L ttyAMA0 115200 vt100`).
 
 Finally, `sudo shutdown -r now`.
 
