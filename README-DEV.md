@@ -62,8 +62,8 @@ Now, you are ready to run your server. If you want it to run for a long time in 
 ```
 $ sudo apt-get screen
 $ screen -S name_of_your_session # the name can be whatever you like
-$ python button-setup.py & # if you have a button and want it to be connected - you'll want this to be run in the background
-$ python discontinuityboard.py # you should be able to connect to this server now!
+$ sudo python button-setup.py & # if you have a button and want it to be connected - you'll want this to be run in the background
+$ python camera.py # you should be able to connect to this server now!
 ```
 
 To leave your `screen` session and keep your server running, `Ctrl-a d`. You can reattach with the command `screen -r` to see the processes you left running. To see all your screen sessions `screen -ls\
