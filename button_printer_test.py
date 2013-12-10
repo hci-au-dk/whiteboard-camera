@@ -18,4 +18,4 @@ while True:
         printer.print_text("Button pressed!")
         printer.linefeed(3)
     prev_input = input #update previous input
-    time.sleep(0.05) #slight pause to debounce
+    time.sleep(0.1) #slight pause to debounce
