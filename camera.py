@@ -105,7 +105,7 @@ def button_snapshot():
     # send image to the server
     global server_config
     if server_config is None:
-        s = 'Server configuration file not found. Perhaps you have not registered this pi yet?'
+        return 'Server configuration file not found. Perhaps you have not registered this pi yet?', 400
 
     ip = server_config['server']
     server_location = 'http://' + server_config['server']
