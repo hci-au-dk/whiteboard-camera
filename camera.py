@@ -42,10 +42,10 @@ def configuration():
     if request.method == 'POST':
         if not isinstance(request.json, dict):
             return 'Malformed configuration data', 400
-        if len(request.json) != 8:
+        if len(request.json) != 9:
             return 'Configuration must have 8 entries', 400
-        if (not 'x0' in request.json) or (not 'y0' in request.data) or (not 'x1' in request.json) or (not 'y1' in request.data) or (not 'x2' in request.json) or (not 'y2' in request.data) or (not 'x3' in request.json) or (not 'y3' in request.data):
-            return 'Configuration must have keys x0, y0, x1, y1, x2, y2, x3, y3', 400
+        if (not 'x0' in request.json) or (not 'y0' in request.data) or (not 'x1' in request.json) or (not 'y1' in request.data) or (not 'x2' in request.json) or (not 'y2' in request.data) or (not 'x3' in request.json) or (not 'y3' in request.data) or (not 'rotation' in request.data):
+            return 'Configuration must have keys x0, y0, x1, y1, x2, y2, x3, y3, rotation', 400
         global config
         config = request.json
         with open('config.json', 'w') as outfile:
