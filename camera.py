@@ -136,7 +136,7 @@ def button_snapshot():
     img = camera_module.takePhoto()
     if config is not None:
         img = transform_perspective(img, int(config['x0']), int(config['y0']), int(config['x1']), int(config['y1']), int(config['x2']), int(config['y2']), int(config['x3']), int(config['y3']))
-        
+        img = img.rotate(int(config['rotation']))
     imageBuffer = StringIO.StringIO() 
     img.save(imageBuffer, format="JPEG")
     imageBuffer.seek(0)
