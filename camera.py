@@ -195,6 +195,21 @@ if __name__ == "__main__":
     handler.setFormatter(formatter)
     logger.addHandler(handler)
 
+    # send ip address to the server
+    if server_config:
+        ip = server_config['server']
+        server_location = 'http://' + server_config['server']
+        data = {'id': server_config['id']}
+        try:
+            r = requests.post(server_location + '/pi-restart/', 
+                              data=data,
+                              timeout=5)
+            tp.print_text("New ip successfully sent to server.")
+            tp.line_feed(5)
+        except:
+            request.exceptions.Timeout  # don't do anything
+        
+
     app.run(debug = True, host='0.0.0.0', port=80)
 
 
