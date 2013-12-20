@@ -72,6 +72,38 @@ To leave your `screen` session and keep your server running, `Ctrl-a d`. You can
 
 You'll want to have your main server running also for full functionality. See the instructions in `README-DEV.md` in [discontinuityboard](https://github.com/hci-au-dk/discontinuityboard).
 
+## Setting up scripts to begin on startup
+
+To have the server and all the things start when the pi powers on, you need to edit `/etc/rc.local`. Here is what it should look like to have the button and server start on power on.
+
+```
+#!/bin/sh -e
+#
+# rc.local
+#
+# This script is executed at the end of each multiuser runlevel.
+# Make sure that the script will "exit 0" on success or any other
+# value on error.
+#
+# In order to enable or disable this script just change the execution
+# bits.
+#
+# By default this script does nothing.
+
+# Print the IP address
+_IP=$(hostname -I) || true
+if [ "$_IP" ]; then
+  printf "My IP address is %s\n" "$_IP"
+fi
+
+cd /home/pi/whiteboard-camera
+python ip_address.py
+python button-setup.py &
+python camera.py
+
+exit 0
+```
+
 
 ## Less Verbose Instructions
 
